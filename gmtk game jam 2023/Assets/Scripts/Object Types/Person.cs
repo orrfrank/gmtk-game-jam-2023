@@ -24,17 +24,17 @@ public class Person : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (floor != targetFloor)
+        {
+            Debug.Log("deez");
+            RequestEnterElevator();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Debug.Log("deez");
-            RequestEnterElevator();
-        }
+        
         ManageVelocity();
         if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
@@ -69,7 +69,7 @@ public class Person : MonoBehaviour
         {
             Debug.Log("nuts");
 
-            ElevatorController.Instance.ElevatorOpenListener.AddListener(EnterElevator);
+            ElevatorController.Instance.AddToEnetrenceQueue(this);
             isWaitingForElevator = true;
         }
     }
@@ -77,28 +77,18 @@ public class Person : MonoBehaviour
     {
         if ((int)Mathf.Round(targetPosition.y) == floor)
         {
-            ElevatorController.Instance.ElevatorOpenListener.RemoveListener(EnterElevator);
             Follow(ElevatorController.Instance.transform);
             isWaitingForElevator = false;
             isInElevator = true;
-            RequestElevatorExit();
         }
     }
-    public void RequestElevatorExit()
-    {
-        ElevatorController.Instance.ElevatorOpenListener.AddListener(ExitElevator);
 
-    }
     public void ExitElevator()
     {
         Debug.Log((int)Mathf.Round(targetPosition.y) == targetFloor);
-        if ((int)Mathf.Round(targetPosition.y) == targetFloor)
-        {
-            ElevatorController.Instance.ElevatorOpenListener.RemoveListener(ExitElevator);
-            isInElevator = false;
-            StopFollowing(ElevatorController.Instance.transform);
-            Debug.Log("exited");
-        }
+        isInElevator = false;
+        StopFollowing(ElevatorController.Instance.transform);
+        Debug.Log("exited");
     }
     public virtual bool ExitConditionMet()
     {
