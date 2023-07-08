@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
+
     // Start is called before the first frame update
     public int floorCount;
     private List<Person>[] peopleInEachFloor;
+
+
+    public List<GameObject> diamonds = new List<GameObject>();
+
     public static BuildingManager Instance { get; private set; }
     private void Start()
     {
@@ -25,15 +30,21 @@ public class BuildingManager : MonoBehaviour
         }
         Instance = this;
     }
+
+    public void AddDiamond(GameObject obj)
+    {
+       diamonds.Add(obj);
+    }
+
     public void Burn()
     {
         Debug.Log("burn");
     }
-    public void AddPerson(Person person, int floorToGet)
+    public void AddPersonToFloor(Person person, int floorToGet)
     {
         peopleInEachFloor[floorToGet].Add(person);
     }
-    public void RemovePerson(Person person, int floorToGet)
+    public void RemovePersonFromFloor(Person person, int floorToGet)
     {
         peopleInEachFloor[floorToGet].Remove(person);
     }
