@@ -101,20 +101,18 @@ public class ElevatorController : MonoBehaviour
                 yield break;
         }
     }
-    public IEnumerator AllowEveryoneFromBeingRemoved()
+    public IEnumerator AllowEveryoneToBeRemoved()
     {
         Stack <Person> list = new Stack<Person>();
-        //Person[] persons = elevatorEntrenceQueue.ToArray<Person>();
-        while (elevatorEntrenceQueue.Count() > 0 && !areExitingElevator)
+        Person[] persons = peopleInElevator.ToArray();
+        for (int i = persons.Length - 1; i >= 0 ; i--)
         {
-            while (peopleInElevator.Count() > 0)
-            {
-                Person p = peopleInElevator.Pop();
-                if (p.ExitConditionMet())
-                    p.ExitElevator();
-                else
-                    list.Push
-            }
+            yield return new WaitForSeconds(0.5f);
+            Person p = peopleInElevator.Pop();
+            if (p.ExitConditionMet())
+                p.ExitElevator();
+            else
+                list.Push(p);
         }
     }
 }
