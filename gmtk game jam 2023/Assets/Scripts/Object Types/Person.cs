@@ -19,8 +19,8 @@ public class Person : MonoBehaviour
     bool isWaitingForElevator = false;
     bool isInElevator;
     [SerializeField] protected Vector2 targetPosition;
-    const int BORDER_MEXICO = 1;
-    const int BORDER_CANADA = 13;
+    public int borderMexico = 1;
+    public int borderCanada = 13;
     int direction = 1;
     public bool isGroupOwner;
     bool isInGroup;
@@ -52,9 +52,9 @@ public class Person : MonoBehaviour
     }
     protected virtual void ManageVelocity()
     {
-        if (targetPosition.x > BORDER_CANADA)
+        if (targetPosition.x > borderCanada)
             direction = -1;
-        else if (targetPosition.x < BORDER_MEXICO)
+        else if (targetPosition.x < borderMexico)
             direction = 1;
     }
     protected virtual void NpcBehavior()
@@ -97,7 +97,7 @@ public class Person : MonoBehaviour
         }
     }
 
-    public void ExitElevator()
+    public virtual void ExitElevator()
     {
         Debug.Log((int)Mathf.Round(targetPosition.y) == targetFloor);
         isInElevator = false;
@@ -119,7 +119,7 @@ public class Person : MonoBehaviour
     //the idea is to have a group leader and for everyone in the group to follow him
     public void Charge(GameObject target)
     {
-        (target.GetComponent("Person") as MonoBehaviour).enabled = false;
+        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
     }
 
     void CheckForGroupers()

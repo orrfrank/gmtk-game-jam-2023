@@ -8,7 +8,7 @@ public class BuildingManager : MonoBehaviour
     // Start is called before the first frame update
     public int floorCount;
     private List<Person>[] peopleInEachFloor;
-
+    public FloorInfo[] floors;
 
     public List<GameObject> diamonds = new List<GameObject>();
 
