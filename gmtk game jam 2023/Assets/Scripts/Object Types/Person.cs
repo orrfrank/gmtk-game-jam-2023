@@ -109,6 +109,13 @@ public class Person : MonoBehaviour
 
     void CheckForGroupers()
     {
+        List<Person> people = BuildingManager.Instance.PeopleInFloor((int)Mathf.Round(targetPosition.y));
+        foreach (Person person in people)
+        {
+            if (person.shirtColor == shirtColor )
+            {
 
+            }
+        }
     }
 }
