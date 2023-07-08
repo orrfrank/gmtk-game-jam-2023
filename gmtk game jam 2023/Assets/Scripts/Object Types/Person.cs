@@ -13,7 +13,7 @@ public class Person : MonoBehaviour
     public int floor = 0;
     public int targetFloor = 1;
     public Transform following = null;
-    public float velocity;
+    public float velocity = 3;
     //INTERNAL VARIABLES
     Rigidbody2D rb;
     bool isWaitingForElevator = false;
@@ -30,10 +30,11 @@ public class Person : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        targetPosition = transform.position;
         floor = (int)Mathf.Round(targetPosition.y);
+        rb = GetComponent<Rigidbody2D>();
         BuildingManager.Instance.AddPersonToFloor(this, floor);
         CheckForGroupers();
-        rb = GetComponent<Rigidbody2D>();
         if (!ExitConditionMet())
         {
             RequestEnterElevator();
@@ -180,6 +181,6 @@ public class Person : MonoBehaviour
     }
     public void RequestGroupElevatorEntrence(int floor)
     {
-
+        //if (ElevatorController.Instance.)
     }
 }

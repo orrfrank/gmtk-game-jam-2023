@@ -17,6 +17,7 @@ public class ElevatorController : MonoBehaviour
     [SerializeField] private Stack<Person> peopleInElevator = new Stack<Person>(); //TODO - add a script where info like floor count is available
     [SerializeField] private Queue<Person>[] elevatorEntrenceQueue = new Queue<Person>[10];
     public int floor;
+    private int elevatorCountOffset = 0;
 
     [SerializeField] bool areExitingElevator;
     public static ElevatorController Instance { get; private set; }
@@ -153,5 +154,9 @@ public class ElevatorController : MonoBehaviour
     public int PeopleWaitingForElevatorInFloor(int floor)
     {
         return elevatorEntrenceQueue[floor].Count;
+    }
+    public int PeopleInElevator()
+    {
+        return peopleInElevator.Count + elevatorCountOffset;
     }
 }
