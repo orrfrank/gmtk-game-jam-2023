@@ -30,7 +30,9 @@ public class Person : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         targetPosition = transform.position;
+        rb = GetComponent<Rigidbody2D>();
         floor = (int)Mathf.Round(targetPosition.y);
         rb = GetComponent<Rigidbody2D>();
         BuildingManager.Instance.AddPersonToFloor(this, floor);
@@ -49,6 +51,8 @@ public class Person : MonoBehaviour
         if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
+        Debug.Log(targetPosition);
+        Debug.Log(rb);
         rb.position = targetPosition;
     }
     protected virtual void ManageVelocity()
