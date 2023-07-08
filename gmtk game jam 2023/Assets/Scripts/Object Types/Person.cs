@@ -26,7 +26,7 @@ public class Person : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (floor != targetFloor)
+        if (ExitConditionMet())
         {
             Debug.Log("deez");
             RequestEnterElevator();
@@ -82,6 +82,8 @@ public class Person : MonoBehaviour
             Follow(ElevatorController.Instance.transform);
             isWaitingForElevator = false;
             isInElevator = true;
+            BuildingManager.Instance.RemovePersonFromFloor(this, (int)Mathf.Round(targetPosition.y));
+
         }
     }
 
@@ -91,9 +93,22 @@ public class Person : MonoBehaviour
         isInElevator = false;
         StopFollowing(ElevatorController.Instance.transform);
         Debug.Log("exited");
+        BuildingManager.Instance.AddPersonToFloor(this, (int)Mathf.Round(targetPosition.y));
     }
     public virtual bool ExitConditionMet()
     {
         return (int)Mathf.Round(targetPosition.y) == targetFloor;
     }    
+
+
+    //====================================
+    //        GROUPING UP
+    //====================================
+    //the code bellow is responsible for the grouping up
+    //the idea is to have a group leader and for everyone in the group to follow him
+
+    void CheckForGroupers()
+    {
+
+    }
 }
