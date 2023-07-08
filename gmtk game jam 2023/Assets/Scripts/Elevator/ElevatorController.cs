@@ -96,7 +96,6 @@ public class ElevatorController : MonoBehaviour
     {
         while (elevatorEntrenceQueue[floor].Count() > 0 && !areExitingElevator)
         {
-            yield return new WaitForSeconds(0.3f);
             if (elevatorAttributes.IsOpen)
             {
                 Person p = elevatorEntrenceQueue[floor].Dequeue();
@@ -106,6 +105,7 @@ public class ElevatorController : MonoBehaviour
             }
             else
                 yield break;
+            yield return new WaitForSeconds(0.3f);
         }
     }
     public IEnumerator AllowEveryoneToBeRemoved()
@@ -149,5 +149,9 @@ public class ElevatorController : MonoBehaviour
         }
         peopleInElevator = list;
         areExitingElevator = false;
+    }
+    public int PeopleWaitingForElevatorInFloor(int floor)
+    {
+        return elevatorEntrenceQueue[floor].Count;
     }
 }

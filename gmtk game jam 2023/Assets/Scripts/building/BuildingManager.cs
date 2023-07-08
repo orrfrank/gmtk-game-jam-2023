@@ -15,11 +15,7 @@ public class BuildingManager : MonoBehaviour
     public static BuildingManager Instance { get; private set; }
     private void Start()
     {
-        peopleInEachFloor = new List<Person>[floorCount];
-        for (int i = 0; i < floorCount; i++)
-        {
-            peopleInEachFloor[i] = new List<Person>();
-        }
+        
     }
     private void Awake()
     {
@@ -29,6 +25,11 @@ public class BuildingManager : MonoBehaviour
             return;
         }
         Instance = this;
+        peopleInEachFloor = new List<Person>[floorCount];
+        for (int i = 0; i < floorCount; i++)
+        {
+            peopleInEachFloor[i] = new List<Person>();
+        }
     }
 
     public void AddDiamond(GameObject obj)
