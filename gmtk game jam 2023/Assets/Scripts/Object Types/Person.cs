@@ -134,7 +134,11 @@ public class Person : MonoBehaviour
     {
         if (chargingTarget != null)
         {
-            
+            if (chargingTarget.transform.position.x - transform.position.x < 0.1)
+            {
+                (chargingTarget.GetComponent("Person") as MonoBehaviour).enabled = false;
+                chargingTarget.transform.position = new Vector3(transform.position.x+0.2f, transform.position.y+0.1f, transform.position.z);
+            }
         }
     }
 
