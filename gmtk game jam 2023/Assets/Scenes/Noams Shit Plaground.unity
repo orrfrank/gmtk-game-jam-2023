@@ -555,7 +555,7 @@ MonoBehaviour:
   gender: 0
   hair: 0
   floor: 0
-  targetFloor: 1
+  targetFloor: 2
   following: {fileID: 0}
   velocity: 3
   targetPosition: {x: 0, y: 0}

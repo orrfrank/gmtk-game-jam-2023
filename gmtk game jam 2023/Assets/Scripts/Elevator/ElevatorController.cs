@@ -120,7 +120,7 @@ public class ElevatorController : MonoBehaviour
         for (int i = persons.Length - 1; i >= 0 ; i--)
         {
             areExitingElevator = true;
-            yield return new WaitForSeconds(0.3f);
+            
             Person p = persons[i];
             Debug.Log(p.ExitConditionMet());
             if (p.ExitConditionMet())
@@ -131,6 +131,9 @@ public class ElevatorController : MonoBehaviour
                 peopleInElevator.Pop();
             }
             else
+            {
+                list.Push(p);
+            }
             if (!elevatorAttributes.IsOpen)
             {
                 while (i >= 0)
@@ -142,7 +145,7 @@ public class ElevatorController : MonoBehaviour
                 areExitingElevator = false;
                 yield return null;
             }
-
+            yield return new WaitForSeconds(0.3f);
         }
         peopleInElevator = list;
         areExitingElevator = false;
