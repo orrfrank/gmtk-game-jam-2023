@@ -30,10 +30,10 @@ public class Person : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         floor = (int)Mathf.Round(targetPosition.y);
         BuildingManager.Instance.AddPersonToFloor(this, floor);
         CheckForGroupers();
-        rb = GetComponent<Rigidbody2D>();
         if (!ExitConditionMet())
         {
             RequestEnterElevator();
@@ -48,6 +48,8 @@ public class Person : MonoBehaviour
         if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
+        Debug.Log(targetPosition);
+        Debug.Log(rb);
         rb.position = targetPosition;
     }
     protected virtual void ManageVelocity()
