@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Guard : MonoBehaviour
+public class Guard : Person
 {
-    // Start is called before the first frame update
-    void Start()
+    bool triggered = false;
+    GameObject chasingAfter;
+    protected override void NpcBehavior()
     {
-        
+        if(triggered)
+        {
+            base.NpcBehavior();
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    public void TriggerGuard(GameObject criminal)
     {
-        
+        chasingAfter = criminal;
+        triggered = true;
     }
 }
