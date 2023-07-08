@@ -15,6 +15,7 @@ public class Person : MonoBehaviour
     public Transform following = null;
     public float velocity;
     //INTERNAL VARIABLES
+    Rigidbody2D rb;
     bool isWaitingForElevator = false;
     bool isInElevator;
     [SerializeField] Vector2 targetPosition;
@@ -24,6 +25,7 @@ public class Person : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         if (floor != targetFloor)
         {
             Debug.Log("deez");
@@ -39,7 +41,7 @@ public class Person : MonoBehaviour
         if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
-        transform.position = targetPosition;
+        rb.position = targetPosition;
     }
     protected virtual void ManageVelocity()
     {
