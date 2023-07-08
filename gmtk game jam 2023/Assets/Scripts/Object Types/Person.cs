@@ -117,6 +117,10 @@ public class Person : MonoBehaviour
     //====================================
     //the code bellow is responsible for the grouping up
     //the idea is to have a group leader and for everyone in the group to follow him
+    public void Charge(GameObject target)
+    {
+        (target.GetComponent("Person") as MonoBehaviour).enabled = false;
+    }
 
     void CheckForGroupers()
     {
