@@ -26,7 +26,7 @@ public class Person : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (ExitConditionMet())
+        if (!ExitConditionMet())
         {
             Debug.Log("deez");
             RequestEnterElevator();
@@ -113,6 +113,13 @@ public class Person : MonoBehaviour
 
     void CheckForGroupers()
     {
+        List<Person> people = BuildingManager.Instance.PeopleInFloor((int)Mathf.Round(targetPosition.y));
+        foreach (Person person in people)
+        {
+            if (person.shirtColor == shirtColor )
+            {
 
+            }
+        }
     }
 }
