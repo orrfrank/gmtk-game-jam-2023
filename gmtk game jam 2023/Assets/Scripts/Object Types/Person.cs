@@ -27,6 +27,7 @@ public class Person : MonoBehaviour
     List<Person> groupMembers;
     Person groupOwner;
     List<int> desireableFloors;
+    public GameObject chargingTarget = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +49,8 @@ public class Person : MonoBehaviour
     {
         
         ManageVelocity();
-        if (following != null) { targetPosition = following.position; }
+        if (chargingTarget != null) { targetPosition = chargingTarget.transform.position; }
+        else if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
         Debug.Log(targetPosition);
@@ -122,9 +124,18 @@ public class Person : MonoBehaviour
     //====================================
     //the code bellow is responsible for the grouping up
     //the idea is to have a group leader and for everyone in the group to follow him
-    public void Charge(GameObject target)
+    public void StartCharge(GameObject target)
     {
         //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
+        velocity = 4;
+        chargingTarget = target;
+    }
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (chargingTarget != null)
+        {
+            
+        }
     }
 
     void CheckForGroupers()
