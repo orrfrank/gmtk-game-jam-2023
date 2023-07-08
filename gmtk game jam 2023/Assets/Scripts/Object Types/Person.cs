@@ -26,7 +26,7 @@ public class Person : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (ExitConditionMet())
+        if (!ExitConditionMet())
         {
             Debug.Log("deez");
             RequestEnterElevator();
