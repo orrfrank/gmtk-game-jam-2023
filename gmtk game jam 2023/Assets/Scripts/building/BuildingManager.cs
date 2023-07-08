@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public List<GameObject> diamonds = new List<GameObject>();
     public static BuildingManager Instance { get; private set; }
     private void Awake()
     {
@@ -15,6 +16,12 @@ public class BuildingManager : MonoBehaviour
         }
         Instance = this;
     }
+
+    public void AddDiamond(GameObject obj)
+    {
+       diamonds.Add(obj);
+    }
+
     public void Burn()
     {
         Debug.Log("burn");
