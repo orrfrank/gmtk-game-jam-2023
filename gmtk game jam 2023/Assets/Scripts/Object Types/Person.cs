@@ -18,7 +18,7 @@ public class Person : MonoBehaviour
     Rigidbody2D rb;
     bool isWaitingForElevator = false;
     bool isInElevator;
-    [SerializeField] Vector2 targetPosition;
+    [SerializeField] protected Vector2 targetPosition;
     const int BORDER_MEXICO = 1;
     const int BORDER_CANADA = 13;
     int direction = 1;
@@ -106,6 +106,10 @@ public class Person : MonoBehaviour
     //====================================
     //the code bellow is responsible for the grouping up
     //the idea is to have a group leader and for everyone in the group to follow him
+    public void Charge(GameObject target)
+    {
+        (target.GetComponent("Person") as MonoBehaviour).enabled = false;
+    }
 
     void CheckForGroupers()
     {
