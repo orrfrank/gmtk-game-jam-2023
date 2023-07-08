@@ -23,11 +23,10 @@ public class Person : MonoBehaviour
     public int borderCanada = 13;
     int direction = 1;
     public bool isGroupOwner;
-    bool isInGroup;
+    [SerializeField] bool isInGroup;
     List<Person> groupMembers;
-    Person groupOwner;
+    [SerializeField] Person groupOwner;
     List<int> desireableFloors;
-    public GameObject chargingTarget = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,12 +48,9 @@ public class Person : MonoBehaviour
     {
         
         ManageVelocity();
-        if (chargingTarget != null) { targetPosition = chargingTarget.transform.position; }
-        else if (following != null) { targetPosition = following.position; }
+        if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
-        Debug.Log(targetPosition);
-        Debug.Log(rb);
         rb.position = targetPosition;
     }
     protected virtual void ManageVelocity()
@@ -83,7 +79,7 @@ public class Person : MonoBehaviour
     }
     public void RequestEnterElevator()
     {
-        
+
         if (ElevatorController.Instance.elevatorAttributes.IsOpen)
             EnterElevator();
         else
@@ -112,12 +108,38 @@ public class Person : MonoBehaviour
         Debug.Log((int)Mathf.Round(targetPosition.y));
         BuildingManager.Instance.AddPersonToFloor(this, (int)Mathf.Round(targetPosition.y));
         CheckForGroupers();
+        if (isGroupOwner && !ExitConditionMet())
+            RequestEnterElevator();
     }
     public virtual bool ExitConditionMet()
     {
-        return (int)Mathf.Round(targetPosition.y) == targetFloor;
+        if (!isGroupOwner)
+        {
+            //Debug.Log(groupMembers.Count);
+            //Debug.Log((int)Mathf.Round(targetPosition.y) == targetFloor);
+            Debug.Log(targetFloor);
+            return (int)Mathf.Round(targetPosition.y) == targetFloor;
+        }
+        Debug.Log("group owner part");
+        bool exit = false;
+        try
+        {
+            foreach (Person member in groupMembers)
+            {
+                if (member != this)
+                    exit |= member.ExitConditionMet();
+            }
+        }
+        catch { Debug.Log("error lol"); }
+        
+        return exit;
     }    
 
+
+    public void Charge(GameObject target)
+    {
+        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
+    }
 
     //====================================
     //        GROUPING UP
@@ -142,14 +164,19 @@ public class Person : MonoBehaviour
         }
     }
 
+
     void CheckForGroupers()
     {
-        Debug.Log("CheckForGroupers");
+
+        if (shirtColor > 2)
+            return;
+        if (!isGroupOwner && isInGroup)
+            return;
+        Debug.Log("shirt color: " + shirtColor);
         List<Person> people = BuildingManager.Instance.PeopleInFloor((int)Mathf.Round(targetPosition.y));
-        Debug.Log(people.Count);
         foreach (Person person in people )
         {
-            if (person.shirtColor == shirtColor && shirtColor < 2 && person != this)
+            if (person.shirtColor == shirtColor  && person != this)
             {
                 if (isGroupOwner)
                 {
@@ -157,6 +184,8 @@ public class Person : MonoBehaviour
 
                 }
                 person.AddToGroup(this);
+                groupOwner = person;
+                isInGroup = true;
                 return;
             }
         }
@@ -164,10 +193,11 @@ public class Person : MonoBehaviour
     }
     public void CreateGroup()
     {
-        Debug.Log("CreateGroup");
+
         isGroupOwner = true;
         isInGroup = true;
         groupMembers = new List<Person>();
+        groupMembers.Add(this);
         desireableFloors = new List<int>();
         if (floor != targetFloor)
             desireableFloors.Add(targetFloor);
@@ -175,21 +205,64 @@ public class Person : MonoBehaviour
     }
     public void AddToGroup(Person member)
     {
-        Debug.Log("AddToGroup");
+
         groupMembers.Add(member);
         member.Follow(this.transform);
         isInGroup = true;
+        if (!isWaitingForElevator)
+        {
+            foreach (Person member2 in groupMembers)
+            {
+                if (!member2.ExitConditionMet())
+                {
+                    RequestEnterElevator();
+                }
+                    
+            }
+        }
+    }
+    public int ExtraPassengers()
+    {
+
+        if (isInGroup && !isGroupOwner)
+        {
+            Debug.Log($"Extra In Group {groupOwner.ExtraPassengers()}");
+            return groupOwner.ExtraPassengers();
+        }
+        try
+        {
+            return groupMembers.Count;
+        }
+        catch
+        {
+            
+            return 0;
+        }
     }
     public void AbandonGroup()
     {
-        Debug.Log("AbandonGroup");
+
+        if (shirtColor > 2)
+            return;
+
         StopFollowing();
+        try
+        {
+            groupOwner.groupMembers.Remove(this);
+
+        }
+        catch
+        { }
         groupOwner = null;
         isInGroup = false;
+        
     }
     public void TransferOwnership(Person newOwner)
     {
-        Debug.Log("TransferOwnership");
+
+        if (shirtColor > 2)
+            return;
+
         isGroupOwner = false;
         foreach (Person member in groupMembers)
         {
@@ -198,8 +271,10 @@ public class Person : MonoBehaviour
 
         }
     }
-    public void RequestGroupElevatorEntrence(int floor)
+    public void RequestGroupElevatorEntrence()
     {
-        //if (ElevatorController.Instance.)
+
+
+        groupOwner.RequestEnterElevator();
     }
 }

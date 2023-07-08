@@ -16,8 +16,8 @@ public class ElevatorController : MonoBehaviour
     public GameObject elevatorDoorObject;
     [SerializeField] private Stack<Person> peopleInElevator = new Stack<Person>(); //TODO - add a script where info like floor count is available
     [SerializeField] private Queue<Person>[] elevatorEntrenceQueue = new Queue<Person>[10];
-    public int floor;
-    private int elevatorCountOffset = 0;
+    public int floor = 0;
+    private int elevatorCountOffset ;
 
     [SerializeField] bool areExitingElevator;
     public static ElevatorController Instance { get; private set; }
@@ -90,31 +90,47 @@ public class ElevatorController : MonoBehaviour
 
     public void AddToEnetrenceQueue(Person person)
     {
-        Debug.Log("AddedPersonToEntrenceQueue");
         elevatorEntrenceQueue[person.floor].Enqueue(person);
+        Debug.Log(elevatorEntrenceQueue[person.floor].Count);
     }
     public IEnumerator AddEveryoneToElevator()
     {
+        Queue<Person> reinsert = new Queue<Person>();
+        Debug.Log(elevatorEntrenceQueue[floor].Count());
+        Person[] deez = elevatorEntrenceQueue[floor].ToArray();
+
         while (elevatorEntrenceQueue[floor].Count() > 0 && !areExitingElevator)
         {
-            if (elevatorAttributes.IsOpen)
+            Debug.Log("iterated");
+            int carryCount = 0;
+            carryCount += elevatorEntrenceQueue[floor].Peek().ExtraPassengers();
+            carryCount += PeopleInElevator();
+            if (carryCount > elevatorAttributes.carryCapacity)
+            {
+                reinsert.Enqueue(elevatorEntrenceQueue[floor].Dequeue());
+                continue;
+            }
+            if (elevatorAttributes.IsOpen )
             {
                 Person p = elevatorEntrenceQueue[floor].Dequeue();
                 peopleInElevator.Push(p);
                 p.EnterElevator();
-                Debug.Log($"someone went from entrence queue to elevator, count: {peopleInElevator.Count()}");
             }
             else
+            {
+                Debug.Log("broken");
                 yield break;
+            }
             yield return new WaitForSeconds(0.3f);
         }
+        foreach (Person member in reinsert)
+            elevatorEntrenceQueue[floor].Enqueue(member);
     }
     public IEnumerator AllowEveryoneToBeRemoved()
     {
         if (peopleInElevator.Count() == 0)
         {
             yield return null;
-            Debug.Log("no one was in the elevator");
         }
         Stack <Person> list = new Stack<Person>();
         Person[] persons = peopleInElevator.ToArray();
@@ -139,8 +155,8 @@ public class ElevatorController : MonoBehaviour
             {
                 while (i >= 0)
                 {
-                    list.Push(persons[i]);
                     i--;
+                    list.Push(persons[i]);
                 }
                 peopleInElevator = list;
                 areExitingElevator = false;
@@ -149,6 +165,7 @@ public class ElevatorController : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
         peopleInElevator = list;
+        Debug.Log("Exited Elevator");
         areExitingElevator = false;
     }
     public int PeopleWaitingForElevatorInFloor(int floor)
@@ -157,6 +174,10 @@ public class ElevatorController : MonoBehaviour
     }
     public int PeopleInElevator()
     {
-        return peopleInElevator.Count + elevatorCountOffset;
+        return peopleInElevator.Count;
+    }
+    public void ModifyFloorOffset(int floorToEdit, int amountToModify)
+    {
+        elevatorCountOffset += amountToModify;
     }
 }
