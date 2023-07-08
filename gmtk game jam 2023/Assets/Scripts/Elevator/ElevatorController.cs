@@ -96,10 +96,12 @@ public class ElevatorController : MonoBehaviour
     {
         while (elevatorEntrenceQueue[floor].Count() > 0 && !areExitingElevator)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.3f);
             if (elevatorAttributes.IsOpen)
             {
-                peopleInElevator.Push(elevatorEntrenceQueue[floor].Dequeue());
+                Person p = elevatorEntrenceQueue[floor].Dequeue();
+                peopleInElevator.Push(p);
+                p.EnterElevator();
                 Debug.Log($"someone went from entrence queue to elevator, count: {peopleInElevator.Count()}");
             }
             else
@@ -118,7 +120,7 @@ public class ElevatorController : MonoBehaviour
         for (int i = persons.Length - 1; i >= 0 ; i--)
         {
             areExitingElevator = true;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
             Person p = persons[i];
             Debug.Log(p.ExitConditionMet());
             if (p.ExitConditionMet())
