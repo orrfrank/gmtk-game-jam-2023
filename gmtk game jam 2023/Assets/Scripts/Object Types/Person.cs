@@ -41,14 +41,14 @@ public class Person : MonoBehaviour
         floor = (int)Mathf.Round( targetPosition.y);
         transform.position = targetPosition;
     }
-    void ManageVelocity()
+    protected virtual void ManageVelocity()
     {
         if (targetPosition.x > BORDER_CANADA)
             direction = -1;
         else if (targetPosition.x < BORDER_MEXICO)
             direction = 1;
     }
-    public void NpcBehavior()
+    protected virtual void NpcBehavior()
     {
         targetPosition = targetPosition + new Vector2(velocity * Time.deltaTime * direction, 0);
     }
@@ -63,7 +63,7 @@ public class Person : MonoBehaviour
     }
     public void RequestEnterElevator()
     {
-        if (ElevatorController.Instance.isOpen)
+        if (ElevatorController.Instance.elevatorAttributes.IsOpen)
             EnterElevator();
         else
         {
@@ -100,4 +100,8 @@ public class Person : MonoBehaviour
             Debug.Log("exited");
         }
     }
+    public virtual bool ExitConditionMet()
+    {
+        return (int)Mathf.Round(targetPosition.y) == targetFloor;
+    }    
 }
