@@ -17,7 +17,9 @@ public class Group : MonoBehaviour
     public bool isHappy;
     bool isWaitingForElevator;
     public bool IsWaitingForElevator { get => isWaitingForElevator;}
-    public Person InitialMember1 { get => InitialMember; }
+    public Person InitialMember1 { get => InitialMember;}
+
+
     private void Start()
     {
         floor = (int)Mathf.Round(InitialMember.transform.position.y);
@@ -47,8 +49,8 @@ public class Group : MonoBehaviour
     {
         if (!AllExitConditionsMet() && !isWaitingForElevator)
         {
-            Debug.Log("entered elevator queue");
             ElevatorController.Instance.AddToEnetrenceQueue(this);
+            InitialMember.FollowX(ElevatorController.Instance.AssignWaitingPositions(floor));
             isWaitingForElevator = true;
         }
             
@@ -60,15 +62,27 @@ public class Group : MonoBehaviour
         int count = other.groupMembers.Count;
         for (int i = 0; i < count; i++)
         {
+            Debug.Log("Merging....");
             Person p = other.groupMembers[i];
             p.SetGroup(this);
             this.groupMembers.Add(p);
             p.Follow(InitialMember.transform);
         }
+        if (other.isWaitingForElevator)
+        {
+            if (!isWaitingForElevator)
+            {
+                this.isWaitingForElevator = true;
+                ElevatorController.Instance.ReplaceGroupInQueue(other, this, floor);
+            }
+            else
+            {
+                ElevatorController.Instance.RemoveFromEntrenceQueue(other);
+            }
+        }
         BuildingManager.Instance.RemoveGroupFromFloor(other, floor);
         ElevatorController.Instance.RemoveFromEntrenceQueue(other);
         Destroy(other);
-        isWaitingForElevator = false;
         CheckIfElevatorNeeded();
     }
     public bool AnyExitCondition()
@@ -77,7 +91,6 @@ public class Group : MonoBehaviour
         {
             if (person.ExitConditionMet())
             {
-                Debug.Log("true");
                 return true;
             }
         }
@@ -95,7 +108,6 @@ public class Group : MonoBehaviour
     }
     public int GroupSize()
     {
-        Debug.Log(groupMembers.Count);
         return groupMembers.Count;
     }
     public void SetFloor(int floor)
@@ -108,6 +120,8 @@ public class Group : MonoBehaviour
     }
     public void EnterElevator()
     {
+        InitialMember.StopFollowingX();
+        InitialMember.Follow(ElevatorController.Instance.transform);
         isWaitingForElevator = false;
         BuildingManager.Instance.RemoveGroupFromFloor(this, floor);
     }
@@ -116,6 +130,12 @@ public class Group : MonoBehaviour
         BuildingManager.Instance.AddGroupToFloor(this, floor);
         CheckForGroupUp();
         CheckIfElevatorNeeded();
+        InitialMember.StopFollowing();
+        foreach (Person member in groupMembers)
+        {
+            if (member != InitialMember)
+                member.Follow(InitialMember.transform);
+        }
     }
     private void RequestElevatorEntrence()
     {
@@ -124,5 +144,13 @@ public class Group : MonoBehaviour
     public List<Person> GetMembers()
     {
         return new List<Person>(groupMembers);
+    }
+    public void EveryoneFollowD(Transform member)
+    {
+        foreach (Person person in groupMembers)
+        {
+            if (member != person.transform)
+                person.Follow(member.transform);
+        }
     }
 }
