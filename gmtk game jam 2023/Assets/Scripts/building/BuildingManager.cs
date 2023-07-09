@@ -7,7 +7,7 @@ public class BuildingManager : MonoBehaviour
 
     // Start is called before the first frame update
     public int floorCount;
-    private List<Person>[] peopleInEachFloor;
+    private List<Group>[] peopleInEachFloor;
     public FloorInfo[] floors;
 
     public List<GameObject> diamonds = new List<GameObject>();
@@ -25,10 +25,10 @@ public class BuildingManager : MonoBehaviour
             return;
         }
         Instance = this;
-        peopleInEachFloor = new List<Person>[floorCount];
+        peopleInEachFloor = new List<Group>[floorCount];
         for (int i = 0; i < floorCount; i++)
         {
-            peopleInEachFloor[i] = new List<Person>();
+            peopleInEachFloor[i] = new List<Group>();
         }
     }
 
@@ -41,16 +41,25 @@ public class BuildingManager : MonoBehaviour
     {
         Debug.Log("burn");
     }
-    public void AddPersonToFloor(Person person, int floorToGet)
+    public void AddGroupToFloor(Group group, int floorToGet)
     {
-        peopleInEachFloor[floorToGet].Add(person);
+        peopleInEachFloor[floorToGet].Add(group);
     }
-    public void RemovePersonFromFloor(Person person, int floorToGet)
+    public void RemoveGroupFromFloor(Group group, int floorToGet)
     {
-        peopleInEachFloor[floorToGet].Remove(person);
+        peopleInEachFloor[floorToGet].Remove(group);
+    }
+    public List<Group> GroupInFloor(int floorToGet)
+    {
+        return new List<Group>(peopleInEachFloor[floorToGet]);
     }
     public List<Person> PeopleInFloor(int floorToGet)
     {
-        return new List<Person>(peopleInEachFloor[floorToGet]);
+        List<Person> persons = new List<Person>();
+        foreach (Group group in peopleInEachFloor[floorToGet])
+        {
+            persons = new List<Person>(group.GetMembers());
+        }
+        return persons;
     }
 }

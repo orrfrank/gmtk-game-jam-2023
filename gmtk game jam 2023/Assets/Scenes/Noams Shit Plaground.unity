@@ -145,7 +145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5658250504383451769, guid: 794369a76694d65449b95eb7d576234c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5658250504383451769, guid: 794369a76694d65449b95eb7d576234c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -218,7 +218,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1195669463}
-  m_RootOrder: -1
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &222125477
 SpriteRenderer:
@@ -302,7 +302,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1195669463}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &539859442
 SpriteRenderer:
@@ -386,7 +386,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 968545470}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &951853356
 SpriteRenderer:
@@ -471,7 +471,7 @@ Transform:
   - {fileID: 951853355}
   - {fileID: 1973369624}
   m_Father: {fileID: 1056353549}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1008891978
 GameObject:
@@ -503,7 +503,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1195669463}
-  m_RootOrder: -1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1008891980
 SpriteRenderer:
@@ -606,6 +606,7 @@ MonoBehaviour:
   elevatorAttributes: {fileID: 1056353551}
   startPos: {fileID: 1422438404}
   elevatorDoorObject: {fileID: 1973369623}
+  peopleInElevator: []
   floor: 0
   areExitingElevator: 0
 --- !u!114 &1056353551
@@ -620,7 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a25b4f399fd5740b9cbbfb332ee521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carryCapacity: 6
+  carryCapacity: 1
 --- !u!1 &1165821980
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +652,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1195669463}
-  m_RootOrder: -1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1165821982
 SpriteRenderer:
@@ -784,7 +785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5658250504383451769, guid: 794369a76694d65449b95eb7d576234c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5658250504383451769, guid: 794369a76694d65449b95eb7d576234c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -888,7 +889,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1973369624}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1447258510
 SpriteRenderer:
@@ -972,7 +973,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1195669463}
-  m_RootOrder: -1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1480348385
 SpriteRenderer:
@@ -1056,7 +1057,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1195669463}
-  m_RootOrder: -1
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1502709933
 SpriteRenderer:
@@ -1270,7 +1271,7 @@ Transform:
   m_Children:
   - {fileID: 1447258509}
   m_Father: {fileID: 968545470}
-  m_RootOrder: -1
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1994909896
 GameObject:
@@ -1390,7 +1391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5658250504383451769, guid: 794369a76694d65449b95eb7d576234c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5658250504383451769, guid: 794369a76694d65449b95eb7d576234c, type: 3}
       propertyPath: m_LocalPosition.z

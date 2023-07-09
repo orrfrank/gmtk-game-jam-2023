@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -14,8 +15,8 @@ public class ElevatorController : MonoBehaviour
     Vector2 mousePos;
     [SerializeField] public Transform startPos;
     public GameObject elevatorDoorObject;
-    [SerializeField] private Stack<Person> peopleInElevator = new Stack<Person>(); //TODO - add a script where info like floor count is available
-    [SerializeField] private Queue<Person>[] elevatorEntrenceQueue = new Queue<Person>[10];
+    [SerializeField] private List<Group> peopleInElevator = new List<Group>();
+    [SerializeField] private List<Group>[] elevatorEntrenceQueue = new List<Group>[10];
     public int floor = 0;
     private int elevatorCountOffset ;
 
@@ -35,7 +36,7 @@ public class ElevatorController : MonoBehaviour
         elevatorAttributes = GetComponent<ElevatorAttributes>();
         for (int i = 0; i < elevatorEntrenceQueue.Length; i++)
         {
-            elevatorEntrenceQueue[i] = new Queue<Person>();
+            elevatorEntrenceQueue[i] = new List<Group>();
         }
     }
 
@@ -55,7 +56,12 @@ public class ElevatorController : MonoBehaviour
     }
     void UpdatePosition()
     {
-        transform.position = (Vector2)startPos.position + new Vector2(0, Mathf.Round(mousePos.y));
+        int floorUpdate = (int)Mathf.Round(mousePos.y);
+        transform.position = (Vector2)startPos.position + new Vector2(0, floorUpdate);
+        foreach (Group group in peopleInElevator )
+        {
+            group.SetFloor(floorUpdate);
+        }
     }
     void UpdateVariables()
     {
@@ -65,7 +71,7 @@ public class ElevatorController : MonoBehaviour
     public void OpenDoor()
     {
         StartCoroutine(AllowEveryoneToBeRemoved());
-        StartCoroutine(AddEveryoneToElevator());
+        
         elevatorDoorObject.transform.localScale = new Vector2(1f, 0);
     }
     public void CloseDoor()
@@ -88,85 +94,54 @@ public class ElevatorController : MonoBehaviour
         }
     }
 
-    public void AddToEnetrenceQueue(Person person)
+    public void AddToEnetrenceQueue(Group group)
     {
-        elevatorEntrenceQueue[person.floor].Enqueue(person);
-        Debug.Log(elevatorEntrenceQueue[person.floor].Count);
+        elevatorEntrenceQueue[group.Floor].Add(group);
+    }
+    public void RemoveFromEntrenceQueue(Group group)
+    {
+        try
+        {
+            elevatorEntrenceQueue[group.Floor].Remove(group);
+
+        }
+        catch { }
     }
     public IEnumerator AddEveryoneToElevator()
     {
-        Queue<Person> reinsert = new Queue<Person>();
-        Debug.Log(elevatorEntrenceQueue[floor].Count());
-        Person[] deez = elevatorEntrenceQueue[floor].ToArray();
-
-        while (elevatorEntrenceQueue[floor].Count() > 0 && !areExitingElevator)
+        foreach (Group group in elevatorEntrenceQueue[floor].ToList())
         {
-            Debug.Log("iterated");
-            int carryCount = 0;
-            carryCount += elevatorEntrenceQueue[floor].Peek().ExtraPassengers();
-            carryCount += PeopleInElevator();
-            if (carryCount > elevatorAttributes.carryCapacity)
+            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity && group.IsWaitingForElevator)
             {
-                reinsert.Enqueue(elevatorEntrenceQueue[floor].Dequeue());
-                continue;
+                if (elevatorAttributes.IsOpen == false)
+                    yield break;
+
+                group.EnterElevator();
+                Debug.Log(elevatorEntrenceQueue[floor].Remove(group));
+                peopleInElevator.Add(group);
+                Console.WriteLine(group);
+                yield return new WaitForSeconds(0.3f);
             }
-            if (elevatorAttributes.IsOpen )
-            {
-                Person p = elevatorEntrenceQueue[floor].Dequeue();
-                peopleInElevator.Push(p);
-                p.EnterElevator();
-            }
-            else
-            {
-                Debug.Log("broken");
-                yield break;
-            }
-            yield return new WaitForSeconds(0.3f);
         }
-        foreach (Person member in reinsert)
-            elevatorEntrenceQueue[floor].Enqueue(member);
+
     }
     public IEnumerator AllowEveryoneToBeRemoved()
     {
-        if (peopleInElevator.Count() == 0)
+        List<Group> temp = new List<Group>( peopleInElevator);
+        foreach (Group group in temp)
         {
-            yield return null;
-        }
-        Stack <Person> list = new Stack<Person>();
-        Person[] persons = peopleInElevator.ToArray();
-        for (int i = persons.Length - 1; i >= 0 ; i--)
-        {
-            areExitingElevator = true;
-            
-            Person p = persons[i];
-            Debug.Log(p.ExitConditionMet());
-            if (p.ExitConditionMet())
+            if (elevatorAttributes.IsOpen == false)
+                yield break;
+            if (group.AnyExitCondition())
             {
-                Debug.Log("someone was removed from the elevator");
+                group.ExitElevator();
+                elevatorEntrenceQueue[floor].Add(group);
+                peopleInElevator.Remove(group);
 
-                p.ExitElevator();
-                peopleInElevator.Pop();
+                yield return new WaitForSeconds(0.3f);
             }
-            else
-            {
-                list.Push(p);
-            }
-            if (!elevatorAttributes.IsOpen)
-            {
-                while (i >= 0)
-                {
-                    i--;
-                    list.Push(persons[i]);
-                }
-                peopleInElevator = list;
-                areExitingElevator = false;
-                yield return null;
-            }
-            yield return new WaitForSeconds(0.3f);
         }
-        peopleInElevator = list;
-        Debug.Log("Exited Elevator");
-        areExitingElevator = false;
+        StartCoroutine(AddEveryoneToElevator());
     }
     public int PeopleWaitingForElevatorInFloor(int floor)
     {

@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 4800242631889212883}
   - component: {fileID: 1118254236260870662}
   - component: {fileID: 8862578708867054712}
+  - component: {fileID: -1736959195563412542}
   m_Layer: 0
   m_Name: Smoker
   m_TagString: Untagged
@@ -211,7 +212,6 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1778385044612323334}
   m_Enabled: 1
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -235,8 +235,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0.0016889572, y: 0.094582215}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -247,6 +246,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
+  serializedVersion: 2
   m_Size: {x: 0.15213764, y: 0.48655352}
   m_EdgeRadius: 0
 --- !u!114 &1118254236260870662
@@ -270,6 +270,9 @@ MonoBehaviour:
   following: {fileID: 0}
   velocity: 3
   targetPosition: {x: 0, y: 0}
+  borderMexico: 1
+  borderCanada: 13
+  ownerGroup: {fileID: -1736959195563412542}
 --- !u!50 &8862578708867054712
 Rigidbody2D:
   serializedVersion: 4
@@ -297,6 +300,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-1736959195563412542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778385044612323334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a813e6e49a28c4f95abaf0cb92e1f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitialMember: {fileID: 1118254236260870662}
+  color: 0
+  floor: 0
+  isHappy: 0
 --- !u!1 &3396497909801311690
 GameObject:
   m_ObjectHideFlags: 0
