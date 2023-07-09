@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -70,7 +71,7 @@ public class ElevatorController : MonoBehaviour
     public void OpenDoor()
     {
         StartCoroutine(AllowEveryoneToBeRemoved());
-        StartCoroutine(AddEveryoneToElevator());
+        
         elevatorDoorObject.transform.localScale = new Vector2(1f, 0);
     }
     public void CloseDoor()
@@ -97,28 +98,50 @@ public class ElevatorController : MonoBehaviour
     {
         elevatorEntrenceQueue[group.Floor].Add(group);
     }
+    public void RemoveFromEntrenceQueue(Group group)
+    {
+        try
+        {
+            elevatorEntrenceQueue[group.Floor].Remove(group);
+
+        }
+        catch { }
+    }
     public IEnumerator AddEveryoneToElevator()
     {
-        foreach (Group group in elevatorEntrenceQueue[floor])
+        foreach (Group group in elevatorEntrenceQueue[floor].ToList())
         {
-            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity)
+            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity && group.iswa)
             {
+                if (elevatorAttributes.IsOpen == false)
+                    yield break;
+
                 group.EnterElevator();
-                elevatorEntrenceQueue[floor].Remove(group);
+                Debug.Log(elevatorEntrenceQueue[floor].Remove(group));
                 peopleInElevator.Add(group);
+                Console.WriteLine(group);
+                yield return new WaitForSeconds(0.3f);
             }
-            yield return new WaitForSeconds(0.3f);
         }
+
     }
     public IEnumerator AllowEveryoneToBeRemoved()
     {
-        foreach (Group group in peopleInElevator)
+        List<Group> temp = new List<Group>( peopleInElevator);
+        foreach (Group group in temp)
         {
-            group.ExitElevator();
-            elevatorEntrenceQueue[floor].Add(group);
-            peopleInElevator.Remove(group);
-            yield return new WaitForSeconds(0.3f);
+            if (elevatorAttributes.IsOpen == false)
+                yield break;
+            if (group.AnyExitCondition())
+            {
+                group.ExitElevator();
+                elevatorEntrenceQueue[floor].Add(group);
+                peopleInElevator.Remove(group);
+
+                yield return new WaitForSeconds(0.3f);
+            }
         }
+        StartCoroutine(AddEveryoneToElevator());
     }
     public int PeopleWaitingForElevatorInFloor(int floor)
     {

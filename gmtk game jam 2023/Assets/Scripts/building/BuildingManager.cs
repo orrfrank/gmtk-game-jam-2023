@@ -53,4 +53,13 @@ public class BuildingManager : MonoBehaviour
     {
         return new List<Group>(peopleInEachFloor[floorToGet]);
     }
+    public List<Person> PeopleInFloor(int floorToGet)
+    {
+        List<Person> persons = new List<Person>();
+        foreach (Group group in peopleInEachFloor[floorToGet])
+        {
+            persons = new List<Person>(group.GetMembers());
+        }
+        return persons;
+    }
 }
