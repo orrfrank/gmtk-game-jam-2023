@@ -8,6 +8,7 @@ TagManager:
   - flammable
   - gem
   - sign
+  - barrier
   layers:
   - Default
   - TransparentFX
