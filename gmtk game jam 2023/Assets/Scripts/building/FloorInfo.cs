@@ -7,5 +7,5 @@ public class FloorInfo : MonoBehaviour
     public bool smokingAllowed;
     public bool hasGuard;
     public int num;
-    public GameObject diamond;
+    public GameObject gem;
 }

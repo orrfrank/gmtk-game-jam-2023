@@ -9,10 +9,10 @@ public class Thief : Person
     // Start is called before the first frame update
     public override bool ExitConditionMet()//exits if one of diamonds is on said floor
     {
-        int thiefPos = (int)Mathf.Round(targetPosition.y);
-        foreach (GameObject obj in BuildingManager.Instance.diamonds) 
+        int thiefFloor = (int)Mathf.Round(targetPosition.y);
+        for (int i = 0; i < BuildingManager.Instance.floors.Length; i++)
         {
-            if (thiefPos == (int)Mathf.Round(obj.transform.position.y))
+            if (thiefFloor == i && BuildingManager.Instance.floors[i].gem != null)
             {
                 return true;
             }

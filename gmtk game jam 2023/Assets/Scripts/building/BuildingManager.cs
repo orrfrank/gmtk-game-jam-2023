@@ -8,17 +8,18 @@ public class BuildingManager : MonoBehaviour
     // Start is called before the first frame update
     public int floorCount;
     private List<Group>[] peopleInEachFloor;
-    public GameObject[] floors;
+    public FloorInfo[] floors;
 
 
     public static BuildingManager Instance { get; private set; }
     private void Start()
     {
         floorCount = transform.childCount;
-        floors = new GameObject[floorCount];
+        floors = new FloorInfo[floorCount];
         for (int i = 0; i < floors.Length; i++)
         {
-            floors[i] = transform.GetChild(i).gameObject;
+            floors[i] = transform.GetChild(i).GetComponent<FloorInfo>();
+            floors[i].num = i;
         }
     }
     private void Awake()
