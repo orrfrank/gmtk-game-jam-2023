@@ -48,7 +48,6 @@ public class Group : MonoBehaviour
     {
         if (!AllExitConditionsMet() && !isWaitingForElevator)
         {
-            Debug.Log("entered elevator queue");
             ElevatorController.Instance.AddToEnetrenceQueue(this);
             InitialMember.FollowX(ElevatorController.Instance.AssignWaitingPositions(floor));
             isWaitingForElevator = true;
@@ -68,6 +67,18 @@ public class Group : MonoBehaviour
             this.groupMembers.Add(p);
             p.Follow(InitialMember.transform);
         }
+        if (other.isWaitingForElevator)
+        {
+            if (!isWaitingForElevator)
+            {
+                this.isWaitingForElevator = true;
+                ElevatorController.Instance.ReplaceGroupInQueue(other, this, floor);
+            }
+            else
+            {
+                ElevatorController.Instance.RemoveFromEntrenceQueue(other);
+            }
+        }
         BuildingManager.Instance.RemoveGroupFromFloor(other, floor);
         ElevatorController.Instance.RemoveFromEntrenceQueue(other);
         Destroy(other);
@@ -79,7 +90,6 @@ public class Group : MonoBehaviour
         {
             if (person.ExitConditionMet())
             {
-                Debug.Log("true");
                 return true;
             }
         }
@@ -97,7 +107,6 @@ public class Group : MonoBehaviour
     }
     public int GroupSize()
     {
-        Debug.Log(groupMembers.Count);
         return groupMembers.Count;
     }
     public void SetFloor(int floor)

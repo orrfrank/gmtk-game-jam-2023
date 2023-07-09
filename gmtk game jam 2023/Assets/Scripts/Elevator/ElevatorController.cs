@@ -133,13 +133,18 @@ public class ElevatorController : MonoBehaviour
         for (int i = 0; i < count; i++)
         {  
             Group group = entrenceQueueDupe[i];
-            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity && group.IsWaitingForElevator)
+            if (!group.IsWaitingForElevator)
+            {
+                elevatorEntrenceQueue[group.Floor].Remove(group);
+                continue;
+            }
+            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity)
             {
                 if (elevatorAttributes.IsOpen == false)
                     yield break;
 
                 group.EnterElevator();
-                Debug.Log(elevatorEntrenceQueue[floor].Remove(group));
+                elevatorEntrenceQueue[group.Floor].Remove(group);
                 peopleInElevator.Add(group);
                 Console.WriteLine(group);
                 yield return new WaitForSeconds(0.3f);
@@ -147,6 +152,11 @@ public class ElevatorController : MonoBehaviour
         }
 
     }
+    public void ReplaceGroupInQueue(Group oldGroup,Group newGroup, int floorT)
+    {
+        elevatorEntrenceQueue[floorT][elevatorEntrenceQueue[floorT].IndexOf(oldGroup)] = newGroup;
+    }
+
     public IEnumerator AllowEveryoneToBeRemoved()
     {
         bool executed = false;
