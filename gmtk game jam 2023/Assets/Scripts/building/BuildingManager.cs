@@ -8,14 +8,18 @@ public class BuildingManager : MonoBehaviour
     // Start is called before the first frame update
     public int floorCount;
     private List<Group>[] peopleInEachFloor;
-    public FloorInfo[] floors;
+    public GameObject[] floors;
 
-    public List<GameObject> diamonds = new List<GameObject>();
 
     public static BuildingManager Instance { get; private set; }
     private void Start()
     {
-        
+        floorCount = transform.childCount;
+        floors = new GameObject[floorCount];
+        for (int i = 0; i < floors.Length; i++)
+        {
+            floors[i] = transform.GetChild(i).gameObject;
+        }
     }
     private void Awake()
     {
@@ -30,11 +34,6 @@ public class BuildingManager : MonoBehaviour
         {
             peopleInEachFloor[i] = new List<Group>();
         }
-    }
-
-    public void AddDiamond(GameObject obj)
-    {
-       diamonds.Add(obj);
     }
 
     public void Burn()

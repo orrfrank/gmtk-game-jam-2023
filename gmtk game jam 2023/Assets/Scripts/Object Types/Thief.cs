@@ -27,8 +27,9 @@ public class Thief : Person
             Debug.Log("with gem");
             velocity = 0;
             GetComponent<Rigidbody2D>().position = transform.position;
+            Guard.stolenFloor = (int)Mathf.Round(transform.position.y);
+            Guard.thief = gameObject;
             StartCoroutine(StealTimer(collision.gameObject));
-            
         }
     }
     IEnumerator StealTimer(GameObject gem)

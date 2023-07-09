@@ -18,7 +18,6 @@ public class Person : MonoBehaviour
     Rigidbody2D rb;
     bool isWaitingForElevator = false;
     bool isInElevator;
-    public Person InitialMember1 { get => InitialMember; }
     [SerializeField] protected Vector2 targetPosition;
     public int borderMexico = 1;
     public int borderCanada = 13;
