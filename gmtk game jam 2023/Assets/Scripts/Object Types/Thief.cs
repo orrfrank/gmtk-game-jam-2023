@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Thief : Person
@@ -18,4 +19,25 @@ public class Thief : Person
         }
         return false;
     }
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("collide");
+        if (collision.gameObject.tag == "gem")
+        {
+            Debug.Log("with gem");
+            velocity = 0;
+            GetComponent<Rigidbody2D>().position = transform.position;
+            StartCoroutine(StealTimer(collision.gameObject));
+            
+        }
+    }
+    IEnumerator StealTimer(GameObject gem)
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(gem);
+
+        Destroy(this.gameObject);
+    }
+
+    
 }

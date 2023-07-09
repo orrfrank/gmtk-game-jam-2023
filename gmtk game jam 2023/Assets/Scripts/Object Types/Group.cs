@@ -19,6 +19,7 @@ public class Group : MonoBehaviour
     public bool IsWaitingForElevator { get => isWaitingForElevator;}
     public Person InitialMember1 { get => InitialMember;}
 
+
     private void Start()
     {
         floor = (int)Mathf.Round(InitialMember.transform.position.y);

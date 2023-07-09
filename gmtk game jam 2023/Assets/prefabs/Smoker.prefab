@@ -272,7 +272,7 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0}
   borderMexico: 1
   borderCanada: 13
-  interpolationSpeed: 13
+  interpolationSpeed: 130
   ownerGroup: {fileID: -1736959195563412542}
 --- !u!50 &8862578708867054712
 Rigidbody2D:

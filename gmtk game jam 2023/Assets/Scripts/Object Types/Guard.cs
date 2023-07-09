@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Guard : Person
 {
-    bool triggered = false;
+    public bool triggered = false;
     GameObject chasingAfter;
     protected override void NpcBehavior()
     {
         if(triggered)
         {
+            Debug.Log("guard trigger");
             base.NpcBehavior();
         }
     }
     public void TriggerGuard(GameObject criminal)
     {
-        chasingAfter = criminal;
-        triggered = true;
+        triggered = false;
     }
 }

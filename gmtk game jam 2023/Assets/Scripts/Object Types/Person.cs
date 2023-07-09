@@ -18,10 +18,12 @@ public class Person : MonoBehaviour
     Rigidbody2D rb;
     bool isWaitingForElevator = false;
     bool isInElevator;
+
     [SerializeField] protected Vector2 targetPosition;
     public int borderMexico = 1;
     public int borderCanada = 13;
-    int direction = 1;
+    protected int direction = 1;
+    public GameObject chargingTarget;
 
     public float readOnlyVelocityOnX;
 
@@ -54,8 +56,7 @@ public class Person : MonoBehaviour
     
     // Update is called once per frame
     void Update()
-    {
-        
+    {    
         ManageVelocity();
         if (ownerGroup.InitialMember1 == this)
         {
@@ -76,13 +77,25 @@ public class Person : MonoBehaviour
         readOnlyVelocityOnX = Mathf.Abs((transform.position.x - lastPos.x) * 10) / Time.deltaTime;
         lastPos = transform.position;
         anim.SetFloat("xVel", readOnlyVelocityOnX);
+
+        if (following != null && chargingTarget == null) { targetPosition = following.position; }
+        else { NpcBehavior(); }
+        DoInUpdate();
+        floor = (int)Mathf.Round( targetPosition.y);
+        rb.position =Vector2.Lerp(transform.position, targetPosition, interpolationSpeed * Time.deltaTime);
+        
+
     }
+
     protected virtual void ManageVelocity()
     {
-        if (targetPosition.x > borderCanada)
-            direction = -1;
-        else if (targetPosition.x < borderMexico)
-            direction = 1;
+        if (chargingTarget == null)
+        {
+            if (targetPosition.x > borderCanada)
+                direction = -1;
+            else if (targetPosition.x < borderMexico)
+                direction = 1;
+        }
     }
     protected virtual void NpcBehavior()
     {
@@ -127,36 +140,49 @@ public class Person : MonoBehaviour
     {
         targetPosition = new Vector2(targetPosition.x, targetFloor);
     }
-    public void Charge(GameObject target)
-    {
-        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
-    }
-
     //====================================
     //        GROUPING UP
     //====================================
     //the code bellow is responsible for the grouping up
     //the idea is to have a group leader and for everyone in the group to follow him
 
-    /*
     public void StartCharge(GameObject target)
     {
-        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
         velocity = 4;
         chargingTarget = target;
     }
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionStay2D(Collision2D collision)
     {
+        Debug.Log("why");
         if (chargingTarget != null)
         {
-            if (chargingTarget.transform.position.x - transform.position.x < 0.1)
+            Debug.Log(collision.gameObject.name + "  " + chargingTarget.name);
+            if (collision.gameObject.name == chargingTarget.name)
             {
+                Debug.Log("works");
                 (chargingTarget.GetComponent("Person") as MonoBehaviour).enabled = false;
                 chargingTarget.transform.position = new Vector3(transform.position.x+0.2f, transform.position.y+0.1f, transform.position.z);
+            }
+            switch (collision.gameObject.tag)
+            {
+                case "barrier":
+                    //destroy barrier and win
+                    break;
+                case "pflammble":
+                    //turn to flammable
+                    break;
+                case "wall":
+                    //destroy wall and win
+                    break; 
             }
         }
     }
 
-    */
+    public virtual void DoInUpdate()
+    {
+
+    }
+
+
     
 }

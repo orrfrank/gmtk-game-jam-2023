@@ -13,6 +13,7 @@ public class Smoker : Person
             BuildingManager.Instance.Burn();
         }
     }
+    /*
     public override void ExitElevator()
     {
         base.ExitElevator();
@@ -35,5 +36,5 @@ public class Smoker : Person
                 return true;
         }
         return false;
-    }
+    }*/
 }
