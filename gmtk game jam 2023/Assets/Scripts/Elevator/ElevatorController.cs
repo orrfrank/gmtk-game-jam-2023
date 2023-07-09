@@ -111,7 +111,7 @@ public class ElevatorController : MonoBehaviour
     {
         foreach (Group group in elevatorEntrenceQueue[floor].ToList())
         {
-            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity && group.iswa)
+            if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity && group.IsWaitingForElevator)
             {
                 if (elevatorAttributes.IsOpen == false)
                     yield break;

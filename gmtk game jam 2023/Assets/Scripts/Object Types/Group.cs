@@ -23,25 +23,28 @@ public class Group : MonoBehaviour
         groupMembers.Add(InitialMember);
         color = InitialMember.shirtColor;
         BuildingManager.Instance.AddGroupToFloor(this, floor);
-        //CheckIfElevatorNeeded();
+        CheckForGroupUp();
+        CheckIfElevatorNeeded();
         
     }
     private void Update()
     {
-        //isHappy = AnyExitCondition();
-        if (Input.GetKeyDown(KeyCode.G))
+        
+    }
+    void CheckForGroupUp()
+    {
+        if (color >= 2)
+            return;
+        List<Group> groups = BuildingManager.Instance.GroupInFloor(floor);
+        int count = groups.Count;
+        for (int i = 0; i < count; i++)
         {
-            List<Group> groups = BuildingManager.Instance.GroupInFloor(floor);
-            int count = groups.Count;
-            for (int i = 0; i < count; i++)
-            {
-                Merge(groups[i]);
-            }
+            Merge(groups[i]);
         }
     }
     private void CheckIfElevatorNeeded()
     {
-        if (!AnyExitCondition())
+        if (!AllExitConditionsMet() && !isWaitingForElevator)
         {
             Debug.Log("entered elevator queue");
             ElevatorController.Instance.AddToEnetrenceQueue(this);
@@ -63,6 +66,7 @@ public class Group : MonoBehaviour
         BuildingManager.Instance.RemoveGroupFromFloor(other, floor);
         ElevatorController.Instance.RemoveFromEntrenceQueue(other);
         Destroy(other);
+        isWaitingForElevator = false;
         CheckIfElevatorNeeded();
     }
     public bool AnyExitCondition()
@@ -70,9 +74,22 @@ public class Group : MonoBehaviour
         foreach (Person person in groupMembers)
         {
             if (person.ExitConditionMet())
+            {
+                Debug.Log("true");
                 return true;
+            }
         }
+        Debug.Log("false");
         return false;
+    }
+    public bool AllExitConditionsMet()
+    {
+        bool ret = true;
+        foreach (Person person in groupMembers)
+        {
+            ret &= person.ExitConditionMet();
+        }
+        return ret;
     }
     public int GroupSize()
     {
@@ -95,6 +112,8 @@ public class Group : MonoBehaviour
     public void ExitElevator()
     {
         BuildingManager.Instance.AddGroupToFloor(this, floor);
+        CheckForGroupUp();
+        CheckIfElevatorNeeded();
     }
     private void RequestElevatorEntrence()
     {
