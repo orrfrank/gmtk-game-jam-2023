@@ -22,6 +22,7 @@ public class Person : MonoBehaviour
     public int borderMexico = 1;
     public int borderCanada = 13;
     int direction = 1;
+    public GameObject chargingTarget;
 
     public float interpolationSpeed;
     [SerializeField] Group ownerGroup;
@@ -43,20 +44,24 @@ public class Person : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
+    {    
         ManageVelocity();
         if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
         rb.position =Vector2.Lerp(transform.position, targetPosition, interpolationSpeed * Time.deltaTime);
+        DoInUpdate();
     }
+
     protected virtual void ManageVelocity()
     {
-        if (targetPosition.x > borderCanada)
-            direction = -1;
-        else if (targetPosition.x < borderMexico)
-            direction = 1;
+        if (chargingTarget == null)
+        {
+            if (targetPosition.x > borderCanada)
+                direction = -1;
+            else if (targetPosition.x < borderMexico)
+                direction = 1;
+        }
     }
     protected virtual void NpcBehavior()
     {
@@ -103,21 +108,14 @@ public class Person : MonoBehaviour
     {
         targetPosition = new Vector2(targetPosition.x, targetFloor);
     }
-    public void Charge(GameObject target)
-    {
-        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
-    }
-
     //====================================
     //        GROUPING UP
     //====================================
     //the code bellow is responsible for the grouping up
     //the idea is to have a group leader and for everyone in the group to follow him
 
-    /*
     public void StartCharge(GameObject target)
     {
-        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
         velocity = 4;
         chargingTarget = target;
     }
@@ -125,14 +123,31 @@ public class Person : MonoBehaviour
     {
         if (chargingTarget != null)
         {
-            if (chargingTarget.transform.position.x - transform.position.x < 0.1)
+            if (collision.gameObject.name == chargingTarget.name)
             {
                 (chargingTarget.GetComponent("Person") as MonoBehaviour).enabled = false;
                 chargingTarget.transform.position = new Vector3(transform.position.x+0.2f, transform.position.y+0.1f, transform.position.z);
             }
+            switch (collision.gameObject.tag)
+            {
+                case "barrier":
+                    //destroy barrier and win
+                    break;
+                case "pflammble":
+                    //turn to flammable
+                    break;
+                case "wall":
+                    //destroy wall and win
+                    break; 
+            }
         }
     }
 
-    */
+    public virtual void DoInUpdate()
+    {
+
+    }
+
+
     
 }

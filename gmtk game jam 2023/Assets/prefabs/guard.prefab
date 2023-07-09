@@ -131,8 +131,9 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0}
   borderMexico: 1
   borderCanada: 13
-  interpolationSpeed: 13
+  interpolationSpeed: 130
   ownerGroup: {fileID: 308958126731629037}
+  triggered: 0
 --- !u!114 &308958126731629037
 MonoBehaviour:
   m_ObjectHideFlags: 0

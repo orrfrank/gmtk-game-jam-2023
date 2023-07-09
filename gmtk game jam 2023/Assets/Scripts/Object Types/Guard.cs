@@ -17,6 +17,5 @@ public class Guard : Person
     public void TriggerGuard(GameObject criminal)
     {
         triggered = false;
-        StartCharge(criminal);
     }
 }
