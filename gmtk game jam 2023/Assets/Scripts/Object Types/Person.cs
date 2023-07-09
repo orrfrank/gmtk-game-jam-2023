@@ -27,6 +27,7 @@ public class Person : MonoBehaviour
     List<Person> groupMembers;
     [SerializeField] Person groupOwner;
     List<int> desireableFloors;
+    public GameObject chargingTarget;
     // Start is called before the first frame update
     void Start()
     {
@@ -136,11 +137,6 @@ public class Person : MonoBehaviour
     }    
 
 
-    public void Charge(GameObject target)
-    {
-        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
-    }
-
     //====================================
     //        GROUPING UP
     //====================================
@@ -148,7 +144,7 @@ public class Person : MonoBehaviour
     //the idea is to have a group leader and for everyone in the group to follow him
     public void StartCharge(GameObject target)
     {
-        //(target.GetComponent("Person") as MonoBehaviour).enabled = false;
+        yield return new WaitUntil(chargingTarget.transform.position.x - transform.position.x > 0);
         velocity = 4;
         chargingTarget = target;
     }
