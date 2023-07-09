@@ -10,7 +10,6 @@ public class BuildingManager : MonoBehaviour
     private List<Group>[] peopleInEachFloor;
     public FloorInfo[] floors;
 
-    public List<GameObject> diamonds = new List<GameObject>();
 
     public static BuildingManager Instance { get; private set; }
     private void Start()
@@ -30,11 +29,27 @@ public class BuildingManager : MonoBehaviour
         {
             peopleInEachFloor[i] = new List<Group>();
         }
-    }
 
-    public void AddDiamond(GameObject obj)
-    {
-       diamonds.Add(obj);
+        floorCount = transform.childCount;
+        floors = new FloorInfo[floorCount];
+        for (int i = 0; i < floors.Length; i++)
+        {
+            floors[i] = transform.GetChild(i).GetComponent<FloorInfo>();
+            floors[i].num = i;
+            for (int j = 0; j < floors[i].transform.childCount; j++)
+            {
+                if (floors[i].transform.GetChild(j).tag == "sign")
+                {
+                    Debug.Log("work?");
+                    floors[i].smokingProhibited = true;
+                }
+                else if (floors[i].transform.GetChild(j).tag == "gem")
+                {
+                    Debug.Log("work??");
+                    floors[i].gem = floors[i].transform.GetChild(j).gameObject;
+                }
+            }
+        }
     }
 
     public void Burn()

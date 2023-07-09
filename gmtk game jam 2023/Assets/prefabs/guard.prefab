@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
-  shirtColor: 0
+  shirtColor: 3
   gender: 0
   hair: 1
   floor: 0
@@ -132,9 +132,10 @@ MonoBehaviour:
   borderMexico: 1
   borderCanada: 13
   chargingTarget: {fileID: 0}
+  readOnlyVelocityOnX: 0
   interpolationSpeed: 130
   ownerGroup: {fileID: 308958126731629037}
-  triggered: 0
+  anim: {fileID: 0}
 --- !u!114 &308958126731629037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a813e6e49a28c4f95abaf0cb92e1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groupMembers: []
   InitialMember: {fileID: 7190388022839211513}
   floor: 0
   isHappy: 0
