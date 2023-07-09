@@ -417,6 +417,7 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0}
   borderMexico: 1
   borderCanada: 13
+  interpolationSpeed: 13
   ownerGroup: {fileID: 5374116835281928843}
 --- !u!114 &5374116835281928843
 MonoBehaviour:
@@ -431,5 +432,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialMember: {fileID: 7570004855997908390}
-  color: 0
   floor: 0
+  isHappy: 0

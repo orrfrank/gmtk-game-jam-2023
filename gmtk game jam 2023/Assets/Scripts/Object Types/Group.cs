@@ -62,6 +62,7 @@ public class Group : MonoBehaviour
             Person p = other.groupMembers[i];
             p.SetGroup(this);
             this.groupMembers.Add(p);
+            p.Follow(InitialMember.transform);
         }
         BuildingManager.Instance.RemoveGroupFromFloor(other, floor);
         ElevatorController.Instance.RemoveFromEntrenceQueue(other);
