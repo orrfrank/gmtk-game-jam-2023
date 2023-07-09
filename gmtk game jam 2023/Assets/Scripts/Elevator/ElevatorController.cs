@@ -62,7 +62,7 @@ public class ElevatorController : MonoBehaviour
     {
         if (elevatorAttributes.IsOpen)
             return;
-        int floorUpdate = (int)Mathf.Clamp( Mathf.Round(mousePos.y), 0, BuildingManager.Instance.floorCount);
+        int floorUpdate = (int)Mathf.Clamp( Mathf.Round(mousePos.y), 0, BuildingManager.Instance.floorCount - 1);
         transform.position = (Vector2)startPos.position + new Vector2(0, floorUpdate);
         foreach (Group group in peopleInElevator )
         {

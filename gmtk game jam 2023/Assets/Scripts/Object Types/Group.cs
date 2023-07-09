@@ -59,6 +59,8 @@ public class Group : MonoBehaviour
     {
         if (other == this || other == null)
             return;
+        if (color >= 2)
+            return;
         int count = other.groupMembers.Count;
         for (int i = 0; i < count; i++)
         {
@@ -133,6 +135,7 @@ public class Group : MonoBehaviour
         InitialMember.StopFollowing();
         foreach (Person member in groupMembers)
         {
+            
             if (member != InitialMember)
                 member.Follow(InitialMember.transform);
         }
