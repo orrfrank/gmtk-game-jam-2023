@@ -56,7 +56,9 @@ public class ElevatorController : MonoBehaviour
     }
     void UpdatePosition()
     {
-        int floorUpdate = (int)Mathf.Round(mousePos.y);
+        if (elevatorAttributes.IsOpen)
+            return;
+        int floorUpdate = (int)Mathf.Clamp( Mathf.Round(mousePos.y), 0, BuildingManager.Instance.floorCount);
         transform.position = (Vector2)startPos.position + new Vector2(0, floorUpdate);
         foreach (Group group in peopleInElevator )
         {
@@ -109,8 +111,11 @@ public class ElevatorController : MonoBehaviour
     }
     public IEnumerator AddEveryoneToElevator()
     {
-        foreach (Group group in elevatorEntrenceQueue[floor].ToList())
-        {
+        List<Group> entrenceQueueDupe = elevatorEntrenceQueue[floor].ToList();
+        int count = entrenceQueueDupe.Count;
+        for (int i = 0; i < count; i++)
+        {  
+            Group group = entrenceQueueDupe[i];
             if (PeopleInElevator() + group.GroupSize() < elevatorAttributes.carryCapacity && group.IsWaitingForElevator)
             {
                 if (elevatorAttributes.IsOpen == false)
@@ -142,6 +147,7 @@ public class ElevatorController : MonoBehaviour
             }
         }
         StartCoroutine(AddEveryoneToElevator());
+        yield break;
     }
     public int PeopleWaitingForElevatorInFloor(int floor)
     {

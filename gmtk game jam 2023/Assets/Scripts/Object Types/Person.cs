@@ -23,6 +23,7 @@ public class Person : MonoBehaviour
     public int borderCanada = 13;
     int direction = 1;
 
+    public float interpolationSpeed;
     [SerializeField] Group ownerGroup;
 
     List<int> desireableFloors;
@@ -48,7 +49,7 @@ public class Person : MonoBehaviour
         if (following != null) { targetPosition = following.position; }
         else { NpcBehavior(); }
         floor = (int)Mathf.Round( targetPosition.y);
-        rb.position = targetPosition;
+        rb.position =Vector2.Lerp(transform.position, targetPosition, interpolationSpeed * Time.deltaTime);
     }
     protected virtual void ManageVelocity()
     {
