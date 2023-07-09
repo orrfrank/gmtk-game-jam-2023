@@ -20,6 +20,10 @@ public class ElevatorController : MonoBehaviour
     public int floor = 0;
     private int elevatorCountOffset ;
 
+    public Transform[] waitingPositions;
+
+    public Animator elevatorAnimator;
+
     [SerializeField] bool areExitingElevator;
     public static ElevatorController Instance { get; private set; }
 
@@ -74,31 +78,44 @@ public class ElevatorController : MonoBehaviour
     {
         StartCoroutine(AllowEveryoneToBeRemoved());
         
-        elevatorDoorObject.transform.localScale = new Vector2(1f, 0);
+        //elevatorDoorObject.transform.localScale = new Vector2(1f, 0);
     }
     public void CloseDoor()
     {
-        elevatorDoorObject.transform.localScale = new Vector2(1f, 1);
+        //elevatorDoorObject.transform.localScale = new Vector2(1f, 1);
 
     }
     void ManageElevatorOpennes()
     {
         if (Input.GetMouseButtonDown(0))
         {
+
+            //StartCoroutine(ElevatorOpening());
+            elevatorAnimator.SetBool("isOpen", true);
             elevatorAttributes.IsOpen = true;
-            
             OpenDoor();
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            CloseDoor();
             elevatorAttributes.IsOpen = false;
+            CloseDoor();
+            elevatorAnimator.SetBool("isOpen", false);
         }
     }
-
+    IEnumerator ElevatorOpening()
+    {
+        elevatorAnimator.SetBool("isOpen", true);
+        yield return new WaitForSeconds(0.1f);
+        elevatorAttributes.IsOpen = true;
+        OpenDoor();
+    }
     public void AddToEnetrenceQueue(Group group)
     {
         elevatorEntrenceQueue[group.Floor].Add(group);
+    }
+    public Transform AssignWaitingPositions(int floorT)
+    {
+        return waitingPositions[elevatorEntrenceQueue[floorT].Count()];
     }
     public void RemoveFromEntrenceQueue(Group group)
     {
@@ -132,6 +149,7 @@ public class ElevatorController : MonoBehaviour
     }
     public IEnumerator AllowEveryoneToBeRemoved()
     {
+        bool executed = false;
         List<Group> temp = new List<Group>( peopleInElevator);
         foreach (Group group in temp)
         {
@@ -139,6 +157,7 @@ public class ElevatorController : MonoBehaviour
                 yield break;
             if (group.AnyExitCondition())
             {
+                executed = true;
                 group.ExitElevator();
                 elevatorEntrenceQueue[floor].Add(group);
                 peopleInElevator.Remove(group);
@@ -146,6 +165,10 @@ public class ElevatorController : MonoBehaviour
                 yield return new WaitForSeconds(0.3f);
             }
         }
+        if (executed)
+            yield return new WaitForSeconds(0.6f);
+        if (elevatorAttributes.IsOpen == false)
+            yield break;
         StartCoroutine(AddEveryoneToElevator());
         yield break;
     }

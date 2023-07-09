@@ -17,6 +17,8 @@ public class Group : MonoBehaviour
     public bool isHappy;
     bool isWaitingForElevator;
     public bool IsWaitingForElevator { get => isWaitingForElevator;}
+    public Person InitialMember1 { get => InitialMember;}
+
     private void Start()
     {
         floor = (int)Mathf.Round(InitialMember.transform.position.y);
@@ -48,6 +50,7 @@ public class Group : MonoBehaviour
         {
             Debug.Log("entered elevator queue");
             ElevatorController.Instance.AddToEnetrenceQueue(this);
+            InitialMember.FollowX(ElevatorController.Instance.AssignWaitingPositions(floor));
             isWaitingForElevator = true;
         }
             
@@ -59,6 +62,7 @@ public class Group : MonoBehaviour
         int count = other.groupMembers.Count;
         for (int i = 0; i < count; i++)
         {
+            Debug.Log("Merging....");
             Person p = other.groupMembers[i];
             p.SetGroup(this);
             this.groupMembers.Add(p);
@@ -67,7 +71,6 @@ public class Group : MonoBehaviour
         BuildingManager.Instance.RemoveGroupFromFloor(other, floor);
         ElevatorController.Instance.RemoveFromEntrenceQueue(other);
         Destroy(other);
-        isWaitingForElevator = false;
         CheckIfElevatorNeeded();
     }
     public bool AnyExitCondition()
@@ -107,6 +110,8 @@ public class Group : MonoBehaviour
     }
     public void EnterElevator()
     {
+        InitialMember.StopFollowingX();
+        InitialMember.Follow(ElevatorController.Instance.transform);
         isWaitingForElevator = false;
         BuildingManager.Instance.RemoveGroupFromFloor(this, floor);
     }
@@ -115,6 +120,12 @@ public class Group : MonoBehaviour
         BuildingManager.Instance.AddGroupToFloor(this, floor);
         CheckForGroupUp();
         CheckIfElevatorNeeded();
+        InitialMember.StopFollowing();
+        foreach (Person member in groupMembers)
+        {
+            if (member != InitialMember)
+                member.Follow(InitialMember.transform);
+        }
     }
     private void RequestElevatorEntrence()
     {
@@ -123,5 +134,13 @@ public class Group : MonoBehaviour
     public List<Person> GetMembers()
     {
         return new List<Person>(groupMembers);
+    }
+    public void EveryoneFollowD(Transform member)
+    {
+        foreach (Person person in groupMembers)
+        {
+            if (member != person.transform)
+                person.Follow(member.transform);
+        }
     }
 }

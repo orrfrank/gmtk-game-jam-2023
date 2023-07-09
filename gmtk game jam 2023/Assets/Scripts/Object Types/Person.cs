@@ -23,12 +23,22 @@ public class Person : MonoBehaviour
     public int borderCanada = 13;
     int direction = 1;
 
+    public float readOnlyVelocityOnX;
+
+    float lerpDuration = 0;
+
+    Transform followX;
+
     public float interpolationSpeed;
     [SerializeField] Group ownerGroup;
 
     List<int> desireableFloors;
 
+    public Animator anim;
     public Group OwnerGroup { get => ownerGroup;}
+
+    Vector3 lastPos;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,18 +48,34 @@ public class Person : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         floor = (int)Mathf.Round(targetPosition.y);
         rb = GetComponent<Rigidbody2D>();
+        lastPos = transform.position;
         
     }
-
+    
     // Update is called once per frame
     void Update()
     {
         
         ManageVelocity();
-        if (following != null) { targetPosition = following.position; }
-        else { NpcBehavior(); }
-        floor = (int)Mathf.Round( targetPosition.y);
+        if (ownerGroup.InitialMember1 == this)
+        {
+            if (followX != null) { targetPosition.Set(followX.position.x, targetPosition.y); }
+            if (following != null) { targetPosition = following.position; }
+            else { NpcBehavior(); }
+        }
+        else
+        {
+            targetPosition = ownerGroup.InitialMember1.transform.position;
+        }
+        floor = (int)Mathf.Round(targetPosition.y);
         rb.position =Vector2.Lerp(transform.position, targetPosition, interpolationSpeed * Time.deltaTime);
+        
+    }
+    private void FixedUpdate()
+    {
+        readOnlyVelocityOnX = Mathf.Abs((transform.position.x - lastPos.x) * 10) / Time.deltaTime;
+        lastPos = transform.position;
+        anim.SetFloat("xVel", readOnlyVelocityOnX);
     }
     protected virtual void ManageVelocity()
     {
@@ -64,7 +90,15 @@ public class Person : MonoBehaviour
     }
     public void Follow(Transform follow)
     {
-        following = follow.transform;
+        following = follow;
+    }
+    public void FollowX(Transform follow)
+    {
+        followX = follow;
+    }
+    public void StopFollowingX()
+    {
+        followX = null;
     }
     public void StopFollowing(Transform follow)
     {
@@ -74,16 +108,6 @@ public class Person : MonoBehaviour
     public void StopFollowing()
     {
         following = null;
-    }
-    public void EnterElevator()
-    {
-        if ((int)Mathf.Round(targetPosition.y) == floor)
-        {
-            Follow(ElevatorController.Instance.transform);
-            isWaitingForElevator = false;
-            isInElevator = true;
-
-        }
     }
 
     public virtual void ExitElevator()
