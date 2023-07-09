@@ -51,7 +51,7 @@ public class Person : MonoBehaviour
         floor = (int)Mathf.Round(targetPosition.y);
         rb = GetComponent<Rigidbody2D>();
         lastPos = transform.position;
-        
+        DoInStart();
     }
     
     // Update is called once per frame
@@ -60,6 +60,7 @@ public class Person : MonoBehaviour
         ManageVelocity();
         if (ownerGroup.InitialMember1 == this)
         {
+            
             if (followX != null) { targetPosition.Set(followX.position.x, targetPosition.y); }
             if (following != null) { targetPosition = following.position; }
             else { NpcBehavior(); }
@@ -125,7 +126,23 @@ public class Person : MonoBehaviour
 
     public virtual void ExitElevator()
     {
-
+        if (ownerGroup.InitialMember1 == this)
+        {
+            foreach (Person p in transform.GetComponent<Group>().groupMembers)
+            {
+                if (p is Smoker)
+                {
+                    if (BuildingManager.Instance.floors[floor].hasGuard && BuildingManager.Instance.floors[floor].smokingProhibited)
+                    {
+                        borderCanada = 3; break;
+                    }
+                }
+            }
+        }
+    }
+    public virtual void EnterElevator()
+    {
+        borderCanada = 13;
     }
     public void SetGroup(Group group)
     {
@@ -182,7 +199,10 @@ public class Person : MonoBehaviour
     {
 
     }
+    public virtual void DoInStart()
+    {
 
+    }
 
     
 }

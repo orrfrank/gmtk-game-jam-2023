@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Group : MonoBehaviour
 {
-    List<Person> groupMembers = new List<Person>();
+    public List<Person> groupMembers = new List<Person>();
     [SerializeField] Person InitialMember;
     int color;
     [SerializeField] private int floor;
@@ -124,6 +124,10 @@ public class Group : MonoBehaviour
         InitialMember.Follow(ElevatorController.Instance.transform);
         isWaitingForElevator = false;
         BuildingManager.Instance.RemoveGroupFromFloor(this, floor);
+        foreach (Person member in groupMembers)
+        {
+            member.EnterElevator();
+        }
     }
     public void ExitElevator()
     {
@@ -133,9 +137,12 @@ public class Group : MonoBehaviour
         InitialMember.StopFollowing();
         foreach (Person member in groupMembers)
         {
+            member.ExitElevator();
             if (member != InitialMember)
                 member.Follow(InitialMember.transform);
+            
         }
+        CheckIfElevatorNeeded();
     }
     private void RequestElevatorEntrence()
     {

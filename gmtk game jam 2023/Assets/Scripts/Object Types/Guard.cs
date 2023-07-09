@@ -19,11 +19,16 @@ public class Guard : Person
                 targetFloor = stolenFloor;
             }
             Debug.Log("guard trigger");
+            BuildingManager.Instance.floors[floor].hasGuard = false;
             base.NpcBehavior();
         }
     }
     public override void DoInUpdate()
     {
 
+    }
+    public override void DoInStart()
+    {
+        BuildingManager.Instance.floors[floor].hasGuard = true;
     }
 }

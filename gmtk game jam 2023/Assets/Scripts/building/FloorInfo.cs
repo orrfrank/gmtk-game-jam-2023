@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FloorInfo : MonoBehaviour
 {
-    public bool smokingAllowed;
+    public bool smokingProhibited;
     public bool hasGuard;
     public int num;
     public GameObject gem;
