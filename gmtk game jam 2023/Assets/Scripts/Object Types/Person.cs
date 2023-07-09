@@ -194,6 +194,13 @@ public class Person : MonoBehaviour
             }
         }
     }
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "barrier")
+        {
+            direction *= -1;
+        }
+    }
 
     public virtual void DoInUpdate()
     {
