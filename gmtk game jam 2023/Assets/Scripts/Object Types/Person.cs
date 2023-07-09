@@ -18,10 +18,11 @@ public class Person : MonoBehaviour
     Rigidbody2D rb;
     bool isWaitingForElevator = false;
     bool isInElevator;
+    public Person InitialMember1 { get => InitialMember; }
     [SerializeField] protected Vector2 targetPosition;
     public int borderMexico = 1;
     public int borderCanada = 13;
-    int direction = 1;
+    protected int direction = 1;
     public GameObject chargingTarget;
 
     public float interpolationSpeed;
@@ -46,11 +47,12 @@ public class Person : MonoBehaviour
     void Update()
     {    
         ManageVelocity();
-        if (following != null) { targetPosition = following.position; }
+        if (following != null && chargingTarget == null) { targetPosition = following.position; }
         else { NpcBehavior(); }
+        DoInUpdate();
         floor = (int)Mathf.Round( targetPosition.y);
         rb.position =Vector2.Lerp(transform.position, targetPosition, interpolationSpeed * Time.deltaTime);
-        DoInUpdate();
+        
     }
 
     protected virtual void ManageVelocity()
@@ -119,12 +121,15 @@ public class Person : MonoBehaviour
         velocity = 4;
         chargingTarget = target;
     }
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionStay2D(Collision2D collision)
     {
+        Debug.Log("why");
         if (chargingTarget != null)
         {
+            Debug.Log(collision.gameObject.name + "  " + chargingTarget.name);
             if (collision.gameObject.name == chargingTarget.name)
             {
+                Debug.Log("works");
                 (chargingTarget.GetComponent("Person") as MonoBehaviour).enabled = false;
                 chargingTarget.transform.position = new Vector3(transform.position.x+0.2f, transform.position.y+0.1f, transform.position.z);
             }

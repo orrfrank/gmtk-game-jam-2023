@@ -6,15 +6,16 @@ TagManager:
   tags:
   - Undefined
   - flammable
+  - gem
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - charger
   - Water
   - UI
-  - 
-  - 
+  - gem
+  - thief
   - 
   - 
   - 
